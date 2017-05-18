@@ -1,0 +1,48 @@
+<html xmlns="http://www.w3.org/1999/html">
+    <head>
+        <% include partials/head.ejs %>
+
+        <style>
+            body { padding-top: 60px; padding-bottom: 30px; }
+            td	{	text-align: center;}
+            th	{	text-align: center;}
+        </style>
+    </head>
+    <body>
+        <div class="row">
+            <div class="col-sm-1"></div>
+            <div class="col-sm-10">
+                <div class="panel panel-warning">
+                    <div class="panel-heading">
+                        <h4><center><%= class_name%>
+                            <br><label>Average Number of Posts created in Discussion Forum</label></center>
+                        </h4>
+                    </div>
+                    <%var outputA = JSON.parse(outputA)%>
+                    <%var outputB = JSON.parse(outputB)%>
+                    <div class="panel-body">
+                        <div>
+
+                        </div>
+                        <div class="col-sm-6">
+                        <label>Set A :</label>
+                        <br/><label>Mean : </label>&nbsp;<%= outputA.mean%>
+                        <br/><label>Standard Deviation : </label>&nbsp;<%=outputA.std_dev%>
+                        <br/><label>Variance : </label>&nbsp;<%=outputA.variance%>
+                        <br/><label>Confidence Interval : </label>&nbsp;<%=outputA.ci1%> to <%=outputA.ci2%>
+                        </div>
+                        <div class="col-sm-6">
+                        <label>Set B :</label>
+                        <br/><label>Mean : </label>&nbsp;<%=outputB.mean%>
+                        <br/><label>Standard Deviation : </label>&nbsp;<%=outputB.std_dev%>
+                        <br/><label>Variance : </label>&nbsp;<%=outputB.variance%>
+                        <br/><label>Confidence Interval : </label>&nbsp;<%=outputB.ci1%> to <%=outputB.ci2%>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-sm-1"></div>
+        </div>
+    </body>
+</html>
