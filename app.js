@@ -13,12 +13,9 @@ var routes = require('./routes')
   ,	dbSeed = require('./helpers/dbSeed')
   //, login = require('./routes/login')
   , signUpTeacher = require('./routes/signUpTeacher')
-  , driveController = require('./routes/driveController')
-  , qnaController = require('./routes/qnaController')
   ,	discussionController = require('./routes/discussionController')
   , quizController = require('./routes/quizController')
   ,	classController = require('./routes/classController')
-  ,	qnaSchema = require('./models/qnaSchema')
   , User = require('./models/userSchema')
   , Class = require('./models/classSchema')
   
@@ -130,8 +127,13 @@ app.get('/logout', function(req, res) {
 
     res.locals.currentUser = undefined;
 	req.session.destroy(function (err) {
-        req.logOut();
-        res.redirect('/');
+		if(err)
+			console.log(err);
+		else{
+            req.logOut();
+            res.redirect('/');
+		}
+
     });
 });
 
@@ -171,7 +173,7 @@ app.get('/auth/google/callback',
        failureRedirect : '/'
     }),
 	function (req,res) {
-		res.redirect('/profile');
+		res.redirect('https://localhost:3000/profile');
 	});
 
 
