@@ -71,32 +71,12 @@ function isLoggedIn(req, res, next) {
 }
 
 app.get('*', isLoggedIn,function(req, res, next) {
-	/*User.find({}).exec(function (err, users) {
-		if(err)
-			console.log(err);
-		else{
-			req.user = users[0];
-			res.locals.currentUser = users[0];
-			next();
-		}
-
-    });*/
-    res.locals.currentUser = req.user;
+	res.locals.currentUser = req.user;
     next();
 
 });
 
 app.post('*', isLoggedIn, function (req,res,next) {
-    /*User.find({}).exec(function (err, users) {
-        if(err)
-            console.log(err);
-        else{
-            req.user = users[0];
-            res.locals.currentUser = users[0];
-            next();
-        }
-
-    });*/
     res.locals.currentUser = req.user;
     next();
 

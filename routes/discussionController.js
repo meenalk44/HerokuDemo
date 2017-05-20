@@ -2,7 +2,6 @@ var mongoose = require('mongoose');
 var Promise = require("bluebird");
 mongoose.Promise = Promise;
 var dbconn = require('../helpers/dbconn');
-var db = mongoose.connection;
 var Class = require('../models/classSchema');
 var Question = require('../models/questionSchema');
 var Answer = require('../models/answerSchema');
@@ -122,7 +121,7 @@ function discussionView(class_id, discussion_id, discussion_template, rating_tem
 
 
 
-};
+}
 
 
 function populateReplies(que) {
@@ -160,7 +159,7 @@ function populateReplies(que) {
                             function (err) {
                                 if (err) {
                                     //res.send("ERROR3" + err);
-                                    resject(err);
+                                    reject(err);
                                 } else {
                                     //res.send(question);
                                     //que.answers_level1 = que_details;
@@ -375,7 +374,6 @@ module.exports.upvoteAnswer = function (req,res) {
     var answer_id = req.param('ans_id');
     var ratingTemplate = "";
     var numOfUpvotes = 0;
-    var currUser = req.user.id;
     var currUserSet = req.user.user_set;
 
     Class.findById(class_id).exec(function (err,classResp) {
@@ -402,7 +400,8 @@ module.exports.upvoteAnswer = function (req,res) {
 
                         },
                         function (err) {
-                            console.log("***************End for: "+alreadyRated);
+                            if(err)
+                                console.log(err);
                             if(alreadyRated == 1){
                                 console.log("^^^^^^^^^^^SHOW ERROR");
                                 //res.redirect('/classes/'+class_id+'/discussion/'+discussion_id);
@@ -515,90 +514,9 @@ module.exports.downvoteAnswer = function (req,res) {
 
 module.exports.totalParticipation  = function (req,res) {
     var discussion_id = req.param('discussion_id');
-    var totalNumOfStudents_A = 0, totalNumOfStudents_B = 0;
     var outputA = {}; var outputB = {};
     var studentIds = [], students_Set_A = [], students_Set_B = [];
     var class_name = '';
-   // when user sets are not considered
-   /* Class.findOne({'discussion_id':discussion_id}).exec(function (err,classEntry) {
-        class_name = classEntry.class_name;
-        totalNumOfStudents_A = classEntry.student_ids.length;
-       async.each(classEntry.student_ids,
-           function (stud_id, callback) {
-               Answer.find({'discussion_id':discussion_id, 'user_id':stud_id        })
-                   .exec(function (err,answersByUser) {
-                      // console.log("Ans By User----------\n", answersByUser);
-                       numOfPostsByUser = answersByUser.length;
-                       console.log("Num of posts by "+ stud_id + " : "+ numOfPostsByUser);
-                       var postEntry = {
-                           student_id : stud_id,
-                           numOfPosts : numOfPostsByUser
-                       };
-                       studentPostsCountArr.push(postEntry);
-                       callback();
-                   });
-           },
-           function (err) {
-               if(err)
-                    console.log(err);
-               else{
-                   console.log("Final Array===========\n"+ JSON.stringify(studentPostsCountArr));
-                   async.series([
-                       function (callbackA) {
-                           Answer.find({'discussion_id':discussion_id}).exec(function (err,answerEntries) {
-                               totalNumOfPosts = answerEntries.length;
-                               console.log("Numof Posts"+ totalNumOfPosts);
-                               console.log("Num of students" + totalNumOfStudents);
-                               callbackA();
-                           });
-
-                       
-                       },
-                       function (callbackB) {
-                           mean = totalNumOfPosts/totalNumOfStudents;
-                           console.log("Mean "+ mean);
-                           callbackB();
-                       
-                       }
-                   ],
-                   function (err,results) {
-                       console.log("results ======\n"+results);
-
-                       var sum = 0;
-                       async.each(studentPostsCountArr,
-                           function (arrEntry,callback1) {
-                               sum += Math.pow(arrEntry.numOfPosts - mean,2);
-                               console.log("Sum "+ sum);
-                               callback1();
-                           },
-                           function (err) {
-                               variance = sum/(totalNumOfStudents - 1);
-                               console.log("Variance " + variance);
-                               std_dev = (Math.sqrt(variance)).toFixed(2);
-                               console.log("Std dev : "+ std_dev);
-                               var value = 1.96*(std_dev/Math.sqrt(totalNumOfStudents - 1));
-                               ci1 = (mean - value).toFixed(2);
-                               ci2 = (mean + value).toFixed(2);
-                               console.log("Confidence interval "+ ci1 + " to "+ ci2);
-                               res.render('discussionAnalytics', {class_name:class_name ,ci1: ci1,ci2:ci2, mean:mean, std_dev:std_dev,variance:variance});
-
-
-                           });
-                       
-                   });
-
-
-
-
-
-               }
-           }
-       );
-
-
-
-    });*/
-
 //-------------------------------------------------code when user sets are considered
    Class.findOne({'discussion_id':discussion_id})
        .populate('student_ids')
@@ -676,11 +594,7 @@ module.exports.totalParticipation  = function (req,res) {
 function calculateConfidenceInterval(student_ids, discussion_id, totalNumOfStudents, outputCb) {
     var totalNumOfPosts = 0, numOfPostsByUser = 0, mean = 0, std_dev =0, variance = 0, ci1=0, ci2 =0;
     var studentPostsCountArr = [];
-    var numOfPostsByUser = 0;
-
-    //Class.findOne({'discussion_id':discussion_id}).exec(function (err,classEntry) {
-
-        async.each(student_ids,
+    async.each(student_ids,
             function (stud_id, callback) {
                 Answer.find({'discussion_id':discussion_id, 'user_id':stud_id})
                     .exec(function (err,answersByUser) {
@@ -755,5 +669,5 @@ function calculateConfidenceInterval(student_ids, discussion_id, totalNumOfStude
             }
         );
 
-};
+}
 
