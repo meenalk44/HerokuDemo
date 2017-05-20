@@ -8,8 +8,8 @@ var app = express();
 
 
 
-var routes = require('./routes')
-  , dbconn = require('./helpers/dbconn')
+//var routes = require('./routes')
+var dbconn = require('./helpers/dbconn')
   ,	dbSeed = require('./helpers/dbSeed')
   //, login = require('./routes/login')
   , signUpTeacher = require('./routes/signUpTeacher')
@@ -162,8 +162,7 @@ function emailInDB(req, res, next) {
 }
 
 app.get('/auth/google', emailInDB, passport.authenticate('google',
-		{ scope : ['https://www.googleapis.com/auth/plus.login',
-		           'email']
+		{ scope : ['email' , 'profile']
 		}
 		));
 
@@ -173,7 +172,7 @@ app.get('/auth/google/callback',
        failureRedirect : '/'
     }),
 	function (req,res) {
-		res.redirect('https://localhost:3000/profile');
+		res.redirect('/profile');
 	});
 
 
@@ -216,8 +215,6 @@ app.post('/classes/:class_id/discussion/:discussion_id/ans/:ans_id/downvote',dis
 
 app.get('/analytics/discussion_id/:discussion_id',discussionController.totalParticipation);
 
-app.get('/classes/drive/:id',driveController.dController);
-app.get('/driveController', driveController.dController);
 
 app.get('/classes/:class_id/quizSettings',quizController.quizSettings);
 app.post('/createQuiz/class_id/:class_id', quizController.createQuiz);
