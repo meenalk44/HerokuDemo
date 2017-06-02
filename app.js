@@ -126,7 +126,7 @@ function emailInDB(req, res, next) {
 		if(err) {
 			console.log(err);
 		} else {
-			//console.log("else "+ users.length);
+			console.log("else "+ users);
 			if(users.length === 0) {
 				// send error saying not a valid user
 				console.log("No users found");
