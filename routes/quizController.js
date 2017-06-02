@@ -361,8 +361,10 @@ module.exports.showAnalytics = function (req,res) {
                             console.log(err);
                         else{
                             quizResps = responses;
-                            quizName = quizResps[0].quiz_name;
-                            console.log("QuizResponse=========\n "+ quizResps[0].quiz_name);
+                            console.log("QuizRESPS:\n" + quizResps);
+                            console.log("QuizRESPS response------\n:" + responses);
+                            quizName = responses[0].quiz_name;
+                            //console.log("QuizResponse=========\n "+ quizResps[0].quiz_name);
                             sample_size = responses.length;
                             console.log("Marks:---\n"+ responses.length);
                             async.series([function (callback1) {
