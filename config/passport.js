@@ -1,6 +1,8 @@
 var GoogleStrategy = require('passport-google-oauth20').Strategy;
 var User = require('../models/userSchema');
 var configAuth = require('./auth');
+var Class = require('../models/classSchema');
+var Discussion = require('../models/discussionForumSchema');
 
 
 module.exports = function(passport){
