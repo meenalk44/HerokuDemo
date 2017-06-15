@@ -121,8 +121,7 @@ app.get('/logout', function(req, res) {
 function emailInDB(req, res, next) {
 	var emailParam = req.param('email');
 	console.log("---EmailInDB--***** "+emailParam);
-
-	User.find({'email': emailParam}, function(err, users) {
+	User.find({email: emailParam}, function(err, users) {
 		if(err) {
 			console.log(err);
 		} else {
